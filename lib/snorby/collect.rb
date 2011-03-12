@@ -1,0 +1,1 @@
+require 'snorby/collect/version'

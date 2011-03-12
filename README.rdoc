@@ -1,0 +1,26 @@
+= snorby-collect
+
+* {Homepage}[http://rubygems.org/gems/snorby-collect]
+* {Documentation}[http://rubydoc.info/gems/snorby-collect/frames]
+
+== Description
+
+TODO: Description
+
+== Features
+
+== Examples
+
+  require 'snorby/collect'
+
+== Requirements
+
+== Install
+
+  $ gem install snorby-collect
+
+== Copyright
+
+Copyright (c) 2011 mephux
+
+See LICENSE.txt for details.

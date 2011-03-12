@@ -1,0 +1,12 @@
+name: snorby-collect
+summary: "TODO: Summary"
+description: "TODO: Description"
+license: MIT
+authors: mephux
+homepage: http://rubygems.org/gems/snorby-collect
+has_yard: true
+
+development_dependencies:
+  ore-tasks: ~> 0.4
+  rspec: ~> 2.4
+  yard: ~> 0.6.0
