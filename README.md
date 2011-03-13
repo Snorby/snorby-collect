@@ -1,7 +1,10 @@
 # snorby-collect
 
-* [http://www.snorby.org][http://www.snorby.org]
-* [Documentation][http://github.com/Snorby/snorby-collect]
+* [snorby.org](http://www.snorby.org)
+* [github.com/Snorby/snorby-collect](http://github.com/snorby-collect/snorby/)
+* [github.com/Snorby/snorby-collect/issues](http://github.com/Snorby/snorby-collect/issues)
+* [github.com/Snorby/snorby-collect/wiki](http://github.com/Snorby/snorby-collect/wiki)
+* irc.freenode.net #snorby
 
 ## Description
 
