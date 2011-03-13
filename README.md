@@ -12,10 +12,10 @@ The snorby collection agent is in charge of monitoring & process unified2 data. 
  * Verbose & Debug Output
  * Multiple Adaptor Support. mysql, sqlite, sqlite::memory: and postgres. (more coming soon)
  * Signature, Classification & Generator Processing
-	The snorby collection agent will import all supplied configurations for database storage before unified2 processing begins. As a result
-	you gain slightly more efficient insert times. The configuration files MD5 will be stored in the sensor table and checked 
-	intermittently for changes. The downside to this approach is the initial import can be time consuming. This option can
-	be disabled if you favor of a more centralized management tool.
+	 The snorby collection agent will import all supplied configurations for database storage before unified2 processing begins. As a result
+	 you gain slightly more efficient insert times. The configuration files MD5 will be stored in the sensor table and checked 
+	 intermittently for changes. The downside to this approach is the initial import can be time consuming. This option can
+	 be disabled if you favor of a more centralized management tool.
 
 ## Example Usage
 
