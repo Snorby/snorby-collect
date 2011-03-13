@@ -11,7 +11,19 @@ has_yard: true
 
 post_install_message: |
   **************************************************************************
+  Snorby Collection Agent
   
+  Configuration Setup
+  $ snorby-collect --config
+  
+  Starting The Collection Agent
+  $ snorby-collect --run --debug
+  
+  Starting the collection agent as a daemon.
+  $ snorby-collect --daemon --quiet
+  
+  http://www.snorby.org
+  More Information: http://github.com/Snorby/snorby-collect
   **************************************************************************
 
 dependencies:
