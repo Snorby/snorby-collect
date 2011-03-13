@@ -26,7 +26,8 @@ module Snorby
 
         has n, :events
 
-        validates_uniqueness_of :hostname, :name
+        validates_uniqueness_of :hostname, :scope => :interface
+        validates_uniqueness_of :name
 
         def events_count
           last_event_id
