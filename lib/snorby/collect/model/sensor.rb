@@ -27,6 +27,7 @@ module Snorby
         has n, :events
 
         validates_uniqueness_of :hostname, :scope => :interface
+        validates_uniqueness_of :interface, :scope => :hostname
         validates_uniqueness_of :name
 
         def events_count
@@ -40,8 +41,8 @@ module Snorby
             :hostname => object.hostname, 
             :interface => object.interface,
             :name => name,
-          })    
-
+          }).save
+          
           sensor
         end
 
