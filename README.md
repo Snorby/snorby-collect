@@ -1,7 +1,7 @@
 # snorby-collect
 
-* {Homepage}[http://github.com/Snorby/snorby-collect]
-* {Documentation}[http://github.com/Snorby/snorby-collect]
+* [http://www.snorby.org][http://www.snorby.org]
+* [Documentation][http://github.com/Snorby/snorby-collect]
 
 ## Description
 
