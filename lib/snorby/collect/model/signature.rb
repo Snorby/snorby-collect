@@ -34,7 +34,7 @@ module Snorby
             
             options[:signatures].each do |key, value|
               signature = Signature.get(:signature_id => key)
-              next if signature && options[:force]
+              next if signature && !options[:force]
 
               if signature
                 signature.update(value)
@@ -58,7 +58,7 @@ module Snorby
             options[:generators].each do |key, value|
               genid, sid = key.split('.')
               signature = Signature.get(:signature_id => sid, :generator_id => genid)
-              next if signature && options[:force]
+              next if signature && !options[:force]
 
               if signature
                 signature.update(value)

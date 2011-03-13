@@ -31,7 +31,7 @@ module Snorby
         [[Classification,:classifications], [Signature, :signatures], [Signature, :generators]].each do |klass, method|
           unless sensor.send(:"#{method}_md5") == Unified2.send(method).send(:md5)
             logger.say(:info, "Database Import: #{method}.")
-            klass.send(:import,  { method => Unified2.send(method).send(:data), :force => true })
+            klass.send(:import,  { method => Unified2.send(method).send(:data)})
             sensor.update(:"#{method}_md5" => Unified2.send(method).send(:md5))
           end
         end

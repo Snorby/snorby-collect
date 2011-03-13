@@ -41,7 +41,14 @@ module Snorby
             :hostname => object.hostname, 
             :interface => object.interface,
             :name => name,
-          }).save
+          })
+          
+          unless sensor.errors.empty?
+            sensor.errors.each do |key, value|
+              fail("Sensor Validation Error: #{key}")
+            end
+            exit -1
+          end
           
           sensor
         end

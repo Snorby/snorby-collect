@@ -38,7 +38,7 @@ module Snorby
 
             options[:classifications].each do |key,value|
               classification = Classification.get(:classification_id => key)
-              next if classification && options[:force]
+              next if classification && !options[:force]
 
               if classification
                 classification.update(value)
