@@ -1,12 +1,27 @@
 name: snorby-collect
-summary: "TODO: Summary"
-description: "TODO: Description"
+summary: The Snorby Unified2 Collection Agent
+description:
+  The snorby collection agent is in charge of monitoring & process unified2 data. 
+  The data collected will be passed to the snorby web application for analysis and reporting.
 license: MIT
-authors: mephux
-homepage: http://rubygems.org/gems/snorby-collect
+authors: Dustin Willis Webber
+email: dustin.webber@gmail.com
+homepage: http://github.com/Snorby/snorby-collect
 has_yard: true
+
+post_install_message: |
+  **************************************************************************
+  
+  **************************************************************************
+
+dependencies:
+  unified2: ~> 0.2.0
+  datamapper: ~> 1.0.2
+  env: ~> 0.1.2
+  ruby-progressbar: ~> 0.9
+  daemon-spawn: ~> 0.4.1
 
 development_dependencies:
   ore-tasks: ~> 0.4
   rspec: ~> 2.4
-  yard: ~> 0.6.0
+  yard: ~> 0.6.1

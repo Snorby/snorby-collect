@@ -1,0 +1,30 @@
+# Snorby Collection Agent Configuration File
+# Version <%= @version %>
+
+# Sensor Configuration
+:sensor:
+  :interface: 'en1'
+  :name: '<%= @hostname %>'
+
+# Path: unified2 log file
+# Example: '/var/log/snort/merged.log'
+:unified2: ''
+
+# Path: sid-msg.map file
+# Example: '/etc/snort/sid-msg.map'
+:signatures: ''
+
+# Path: gen-msg.map file
+# Example: '/etc/snort/gen-msg.map'
+:generators: ''
+
+# Path: classification.config file
+# Example: '/etc/snort/classification.config'
+:classifications: ''
+
+:database:
+  :adapter: 'mysql' # sqlite, sqlite::memory:, mysql, postgres
+  :database: 'rUnified2'
+  :username: 'root'
+  :password: 'password'
+  :host: 'localhost'

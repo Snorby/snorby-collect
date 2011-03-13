@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+
+begin
+  require 'snorby/collect'
+rescue LoadError => e
+  STDERR.puts 'Could not load "snorby/collect"'
+  exit -1
+end
+
+Snorby::Collect::CLI.start
