@@ -43,11 +43,12 @@ module Snorby
           next if event.signature.blank?
 
           logger.say(:info, "#{event.sensor.id}.#{event.id}")
+          
           puts event if logger.debug?
 
           insert_event = Event.new({
                                      :event_id => event.id,
-                                     :uid => event.uid,
+                                     :checksum => event.checksum,
                                      :created_at => event.timestamp,
                                      :sensor_id => event.sensor.id,
                                      :source_ip => event.source_ip,

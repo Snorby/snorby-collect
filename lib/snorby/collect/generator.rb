@@ -1,11 +1,12 @@
-require 'unified2'
+require 'snorby/collect/helpers'
 require 'fileutils'
 require 'erb'
 
 module Snorby
   module Collect
     module Generator
-
+      extend Collect::Helpers
+      
       @@template_dir = File.join(File.dirname(__FILE__), 'data')
 
       def Generator.configuration_file(path, file)
@@ -21,11 +22,8 @@ module Snorby
           end
         end
         
-        if (editor = Env.editor)
-          STDOUT.flush && `#{editor} #{file.to_s}`
-        else
-          STDOUT.flush && `nano #{file.to_s}`
-        end
+        logger.info("A default configuration file has been generated and placed in #{path}.")
+        logger.info("Please edit this file for your environment and continue.")
       end
 
     end

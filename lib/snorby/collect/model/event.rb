@@ -9,8 +9,8 @@ module Snorby
         timestamps :created_at, :updated_at
 
         property :id, Serial, :index => true
-
-        property :uid, String, :index => true
+        
+        property :checksum, String, :index => true
 
         property :event_id, Integer, :index => true
 
@@ -46,7 +46,7 @@ module Snorby
 
         belongs_to :signature
 
-        validates_uniqueness_of :uid
+        validates_uniqueness_of :event_id, :scope => :sensor_id
 
         def update_sensor
           sensor.update(:last_event_id => self.event_id)

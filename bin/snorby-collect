@@ -1,11 +1,15 @@
 #!/usr/bin/env ruby
-require 'rubygems'
+#require 'rubygems'
 
-begin
-  require 'snorby/collect'
-rescue LoadError => e
-  STDERR.puts 'Could not load "snorby/collect"'
-  exit -1
-end
+$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
 
+# begin
+#   require 'snorby/collect'
+# rescue LoadError => e
+#   STDERR.puts 'Could not load "snorby/collect"'
+#   exit -1
+# end
+
+
+require 'snorby/collect'
 Snorby::Collect::CLI.start

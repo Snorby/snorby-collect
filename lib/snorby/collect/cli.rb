@@ -16,6 +16,7 @@ module Snorby
         @daemon_args = nil
         @run = false
         @verbose = :verbose
+
         optparse(@args)
       end
 
@@ -30,7 +31,7 @@ module Snorby
 
           @opts.program_name = "snorby-collect"
           @opts.banner = "Snorby Collection Agent v#{Snorby::Collect::VERSION}\n\n"
-          @opts.separator "usage: snorby-collect [OPTIONS]"
+          @opts.separator "usage: snorby-collect --config PATH [OPTIONS]"
 
           @opts.on('-r', '--run', 'Start Snorby-Collect without daemonizing the process.') do |run|
             @run = true
@@ -41,9 +42,8 @@ module Snorby
             @daemon_args = daemon_args
           end
 
-          @opts.on('-c', '--config', 'Edit or Create the Snorby-Collect configuration file.') do |config|
-            Config.edit
-            exit -1
+          @opts.on('-c', '--config PATH', 'Snorby agent configuration file.') do |config|
+            @configuration = Config.open(config)
           end
 
           @opts.on('-q', '--quiet', 'Silence all logging.') do |verbose|
@@ -60,29 +60,37 @@ module Snorby
           end
 
           begin
-            usage if @args.empty?
-            @opts.parse!(@args)
             Snorby::Collect.logger = Logger.new(@verbose)
+            usage if @args.empty?
+            
+            @opts.parse!(@args)
+
+            unless @configuration
+              usage('You must supply a configuration file.')
+            end
 
             if Config.configured?
               Snorby::Collect.logger = Logger.new(@verbose)
 
               if @run || @daemon
                 if @daemon
-                  Daemon.spawn!({
-                  :application => "Snorby Collection Agent v#{Snorby::Collect::VERSION}",
-                  :log_file => File.join(Config.logs, 'collection.log'),
-                  :pid_file => File.join(Config.pids, 'collection.pid'),
-                  :sync_log => true,
-                  :working_dir => Config.path
-                  }, [@daemon_args, @verbose])
+                  Daemon.spawn!(
+                    {
+                      :application => "Snorby Collection Agent v#{Snorby::Collect::VERSION}",
+                      :log_file => File.join(Config.logs, 'collection.log'),
+                      :pid_file => File.join(Config.pids, 'collection.pid'),
+                      :sync_log => true,
+                      :working_dir => Config.path
+                    },
+                    [@daemon_args, @verbose]
+                  )
                 else
                   @collect = Collector.new
                   @collect.setup
                   @collect.start
                 end
-              end
 
+              end
             end
           rescue Interrupt
             Snorby::Collect.logger.warn('Shutting down...')
@@ -103,11 +111,11 @@ module Snorby
 
         end
 
-        def usage
+        def usage(error=nil)
+          Snorby::Collect.logger.warn(error) if error
           puts "\n#{@opts}\n"
           exit -1
         end
-
     end
 
   end
