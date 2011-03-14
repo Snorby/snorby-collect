@@ -30,7 +30,7 @@ module Snorby
         optparse(@args)
       end
 
-      def CLI.start
+      def CLI.start      
         self.new(*ARGV)
       end
 
@@ -76,7 +76,6 @@ module Snorby
             Config.build_defaults
             
             usage if @args.empty?
-            
             @opts.parse!(@args)
 
             unless @configuration

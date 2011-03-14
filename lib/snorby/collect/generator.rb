@@ -23,9 +23,7 @@ module Snorby
             file.close
           end
         end
-        
-        logger.info("A default configuration file has been generated and placed in #{path}/.")
-        logger.info("Please edit this file for your environment and continue.")
+
       end
 
     end
