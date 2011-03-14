@@ -13,22 +13,23 @@ post_install_message: |
   **************************************************************************
    Snorby Collection Agent
    
-   Configuration Setup
-    $ snorby-collect --config
+   A default configuration file will be created and placed in ~/.snorby.
+   To use snorby-collect with multipule logical sensors you simple need
+   to create individual configurations and start snorby-collect for each. 
    
    Starting The Collection Agent
-    $ snorby-collect --run --debug
+    $ snorby-collect --config PATH --run --debug
    
    Starting the collection agent as a daemon.
-    $ snorby-collect --daemon --quiet
+    $ snorby-collect --config PATH --daemon start --quiet
    
    http://www.snorby.org
    More Information: http://github.com/Snorby/snorby-collect
   **************************************************************************
 
 dependencies:
-  unified2: ~> 0.2.0
-  datamapper: ~> 1.0.2
+  unified2: ~> 0.3.2
+  datamapper: ~> 1.1.0
   env: ~> 0.1.2
   ruby-progressbar: ~> 0.0.9
   daemon-spawn: ~> 0.4.1

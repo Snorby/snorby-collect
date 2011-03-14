@@ -15,7 +15,8 @@ module Snorby
         [:classifications, 'You must have a classifications file specified.'],
         [:generators, 'You must have a generators file specified.'],
         [:signatures, 'You must have a signatures file specified.'],
-        [:sensor, 'You must configure a sensor.']
+        [:name, 'You must configure a sensor name.'],
+        [:interface, 'You must configure a sensor interface.']
       ]
 
       # The users home directory
@@ -33,18 +34,22 @@ module Snorby
       # Default configuration file
       @@config_file = File.join(@@path, 'default.yml')
 
-      def Config.open(path)
-        
+      def Config.build_defaults
         unless File.exists?(@@config_file)
           # Build default configuration file
           Generator.configuration_file(@@path, @@config_file)
         end
+      end
+
+      def Config.open(path)
 
         if File.exists?(path)
 
           if File.readable?(path)
             # Snorby collection options.
-            @@config_file = File.join(@@path)
+            @@config_file = path
+
+            return @@config_file
           else
             logger.fail("#{path} configuration file not readable")
           end
@@ -53,6 +58,7 @@ module Snorby
           logger.fail("#{path} configuration file not found")
         end
 
+        false
       end
 
       def Config.path
@@ -60,8 +66,16 @@ module Snorby
         @@path
       end
 
-      def Config.sensor
-        @@config[:sensor]
+      def Config.logname
+        @@config[:name].camelize
+      end
+      
+      def Config.name
+        @@config[:name]
+      end
+
+      def Config.interface
+        @@config[:interface]
       end
 
       def Config.classifications
@@ -91,7 +105,9 @@ module Snorby
       end
 
       def Config.configurations
-        @@config = YAML.load_file(@@config_file) if File.readable?(@@config_file)
+        if File.readable?(@@config_file)
+          @@config = YAML.load_file(@@config_file)
+        end
       end
 
       def Config.edit
@@ -101,13 +117,20 @@ module Snorby
       def Config.configured?
         Config.configurations
 
-        MANDATORY_CONFIGURATION.each do |option, error|
-          unless (@@config.has_key?(option) && @@config[option])
-            STDERR.puts "Configuration Error: " + error
-            exit 1
+        if @@config.is_a?(Hash)
+          
+          MANDATORY_CONFIGURATION.each do |option, error|
+            unless (@@config.has_key?(option) && @@config[option])
+              logger.fail("Configuration Error: " + error)
+              exit 1
+            end
           end
+        
+        else
+          logger.fail("Configuration Error: #{@@config_file} is not a snorby-collect configuration file.")
+          exit 1
         end
-
+        
         true
       end
 
@@ -116,6 +139,5 @@ module Snorby
       end
 
     end
-
   end
 end

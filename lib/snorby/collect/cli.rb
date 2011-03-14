@@ -11,12 +11,22 @@ module Snorby
     class CLI
 
       def initialize(*args)
+        # CLI arguments
         @args = args
+        
+        # Run as daemon
         @daemon = false
+        
+        # Daemon arguments
         @daemon_args = nil
+        
+        # Run snorby-collect
         @run = false
+        
+        # Log level
         @verbose = :verbose
-
+        Snorby::Collect.logger = Logger.new(@verbose)
+        
         optparse(@args)
       end
 
@@ -31,7 +41,7 @@ module Snorby
 
           @opts.program_name = "snorby-collect"
           @opts.banner = "Snorby Collection Agent v#{Snorby::Collect::VERSION}\n\n"
-          @opts.separator "usage: snorby-collect --config PATH [OPTIONS]"
+          @opts.separator "usage: snorby-collect --config PATH --[run/daemon <command>]"
 
           @opts.on('-r', '--run', 'Start Snorby-Collect without daemonizing the process.') do |run|
             @run = true
@@ -60,7 +70,11 @@ module Snorby
           end
 
           begin
-            Snorby::Collect.logger = Logger.new(@verbose)
+            
+            # Build default configuration file
+            # and directory structure.
+            Config.build_defaults
+            
             usage if @args.empty?
             
             @opts.parse!(@args)
@@ -71,14 +85,13 @@ module Snorby
 
             if Config.configured?
               Snorby::Collect.logger = Logger.new(@verbose)
-
               if @run || @daemon
                 if @daemon
                   Daemon.spawn!(
                     {
                       :application => "Snorby Collection Agent v#{Snorby::Collect::VERSION}",
-                      :log_file => File.join(Config.logs, 'collection.log'),
-                      :pid_file => File.join(Config.pids, 'collection.pid'),
+                      :log_file => File.join(Config.logs, "#{Config.logname}.log"),
+                      :pid_file => File.join(Config.pids, "#{Config.logname}.pid"),
                       :sync_log => true,
                       :working_dir => Config.path
                     },
@@ -108,7 +121,6 @@ module Snorby
             Snorby::Collect.logger.fail(e.message)
             exit -1
           end
-
         end
 
         def usage(error=nil)
@@ -117,6 +129,5 @@ module Snorby
           exit -1
         end
     end
-
   end
 end

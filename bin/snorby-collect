@@ -10,6 +10,5 @@ $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
 #   exit -1
 # end
 
-
 require 'snorby/collect'
 Snorby::Collect::CLI.start

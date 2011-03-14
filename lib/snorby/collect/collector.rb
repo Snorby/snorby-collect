@@ -1,5 +1,5 @@
-require 'unified2'
 require 'snorby/collect/database'
+require 'unified2'
 
 module Snorby
   module Collect
@@ -11,10 +11,12 @@ module Snorby
 
       def initialize
         Database.connect(Config.database)
+        
         logger.say(:info, 'Loading configurations into memory.')
+        
         Unified2.configuration do
-          sensor :interface => Config.sensor[:interface],
-            :name => Config.sensor[:name]
+          sensor :interface => Config.interface,
+            :name => Config.name
             
           load :classifications, Config.classifications
           load :generators, Config.generators
@@ -24,21 +26,25 @@ module Snorby
 
       def setup
         logger.say(:info, 'Looking for sensor.')
+        
         @sensor = Sensor.find(Unified2.sensor)
         Unified2.sensor.id = sensor.id
+        
         logger.say(:info, "Found: #{@sensor.hostname}")
         
         [[Classification,:classifications], [Signature, :signatures], [Signature, :generators]].each do |klass, method|
+          
           unless sensor.send(:"#{method}_md5") == Unified2.send(method).send(:md5)
             logger.say(:info, "Database Import: #{method}.")
             klass.send(:import,  { method => Unified2.send(method).send(:data)})
             sensor.update(:"#{method}_md5" => Unified2.send(method).send(:md5))
           end
+          
         end
       end
 
       def start
-        logger.say(:info, "Initializing unified2 for monitoring.")
+        logger.say(:info, "Monitoring unified2 for data to process.")
         Unified2.watch(Config.unified2, @sensor.last_event_id ? @sensor.last_event_id + 1 : :first) do |event|
           next if event.signature.blank?
 

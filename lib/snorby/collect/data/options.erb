@@ -1,12 +1,15 @@
-# Snorby Collection Agent Configuration File
+# Snorby Collection Agent Sensor Configuration
 # Version <%= @version %>
 
-# Sensor Configuration
-:sensor:
-  :interface: 'en1'
-  :name: '<%= @hostname %>'
+# Sensor interface
+# Example: 'eth0'
+:interface: ''
 
-# Path: unified2 log file
+# Sensor name
+# Example: 'Home Sensor'
+:name: '<%= @hostname %>'
+
+# Path: sid-msg.map file
 # Example: '/var/log/snort/merged.log'
 :unified2: ''
 
