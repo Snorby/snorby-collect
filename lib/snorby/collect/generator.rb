@@ -1,4 +1,5 @@
 require 'snorby/collect/helpers'
+require 'bcrypt'
 require 'fileutils'
 require 'erb'
 
@@ -11,7 +12,6 @@ module Snorby
 
       def Generator.configuration_file(path, file)
         @version = Snorby::Collect::VERSION
-        @hostname = Socket.gethostname
         
         template = File.read(File.join(@@template_dir, 'options.erb'))
         

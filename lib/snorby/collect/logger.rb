@@ -47,9 +47,9 @@ module Snorby
         when :info
           info(message)
         when :warn
-          warn(message, true)
+          warn(message)
         when :fail
-          fail(message, true)
+          fail(message)
         end
         @timestamp = timestamp
       end

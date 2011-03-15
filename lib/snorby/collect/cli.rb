@@ -13,24 +13,24 @@ module Snorby
       def initialize(*args)
         # CLI arguments
         @args = args
-        
+
         # Run as daemon
         @daemon = false
-        
+
         # Daemon arguments
         @daemon_args = nil
-        
+
         # Run snorby-collect
         @run = false
-        
+
         # Log level
         @verbose = :verbose
         Snorby::Collect.logger = Logger.new(@verbose)
-        
+
         optparse(@args)
       end
 
-      def CLI.start      
+      def CLI.start
         self.new(*ARGV)
       end
 
@@ -49,7 +49,13 @@ module Snorby
 
           @opts.on('-d', '--daemon COMMAND', 'Run as daemon. Example -d [start,stop,status,restart]') do |daemon_args|
             @daemon = true
-            @daemon_args = daemon_args
+            if daemon_args.match(/^(start|stop|status|restart)$/)
+              @daemon_args = daemon_args
+            else
+              Snorby::Collect.logger.fail("Unknown option for daemon `#{daemon_args}`")
+              Snorby::Collect.logger.info("Available options: start, stop, status and restart.")
+              usage
+            end
           end
 
           @opts.on('-c', '--config PATH', 'Snorby agent configuration file.') do |config|
@@ -70,19 +76,22 @@ module Snorby
           end
 
           begin
-            
+
             # Build default configuration file
             # and directory structure.
             Config.build_defaults
-            
+
             usage if @args.empty?
             @opts.parse!(@args)
 
             unless @configuration
-              usage('You must supply a configuration file.')
+              Snorby::Collect.logger.fail('You must supply a configuration file.')
+              Snorby::Collect.logger.info("Example: snorby-collect --run --config /path/to/config")
+              usage
             end
 
             if Config.configured?
+
               Snorby::Collect.logger = Logger.new(@verbose)
               if @run || @daemon
                 if @daemon

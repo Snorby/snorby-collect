@@ -103,6 +103,10 @@ module Snorby
         FileUtils.mkdir_p(@@pids)
         @@pids
       end
+      
+      def Config.checksum
+        Digest::MD5.hexdigest(Config.unified2)
+      end
 
       def Config.configurations
         if File.readable?(@@config_file)

@@ -14,6 +14,8 @@ module Snorby
 
         property :event_id, Integer, :index => true
 
+        property :host_id, Integer, :index => true
+
         property :sensor_id, Integer, :index => true
 
         property :source_ip, String, :index => true
@@ -39,6 +41,8 @@ module Snorby
         property :packet_length, Integer
 
         property :packet, Text
+
+        belongs_to :host
 
         belongs_to :sensor
 

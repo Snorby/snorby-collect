@@ -8,7 +8,7 @@ module Snorby
       include Collect::Helpers
 
       def start(args)
-        args.is_a?(Array) ? ((args.first == :debug) ? log = :debug : log = :none) : log = :none
+        args.is_a?(Array) ? ((args.first == :debug) ? log = :verbose : log = :verbose) : log = :verbose
         Snorby::Collect.logger = Logger.new(log)
         logger.say(:info, "Daemon started successfully. PID: #{self.pid}")
         @collect = Collector.new
