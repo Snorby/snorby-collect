@@ -1,5 +1,3 @@
-require 'progressbar'
-
 module Snorby
   module Collect
     module Model
@@ -23,36 +21,9 @@ module Snorby
 
         has n, :events
 
-        # belongs_to :severity
+        belongs_to :severity
 
         validates_uniqueness_of :name, :classification_id
-
-        def self.import(options={})
-
-          if options.has_key?(:classifications)
-
-            unless Snorby::Collect.logger.quiet?
-              pbar = ProgressBar.new('Classifica...', options[:classifications].size)
-              pbar.bar_mark = 'X'
-            end
-
-            options[:classifications].each do |key,value|
-              classification = Classification.get(:classification_id => key)
-              next if classification && !options[:force]
-
-              if classification
-                classification.update(value)
-              else
-                value.merge!(:classification_id => key)
-                Classification.create(value)
-              end
-
-              pbar.inc unless Snorby::Collect.logger.quiet?
-            end
-
-            pbar.finish unless Snorby::Collect.logger.quiet?
-          end
-        end
 
       end
 

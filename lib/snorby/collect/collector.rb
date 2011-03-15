@@ -31,16 +31,6 @@ module Snorby
         Unified2.sensor.id = @sensor.id
 
         logger.say(:info, "Found: \"#{@sensor.name}\" (#{@sensor.interface}@#{@sensor.host.hostname})")
-
-        [[Classification,:classifications], [Signature, :signatures], [Signature, :generators]].each do |klass, method|
-
-          unless @host.send(:"#{method}_md5") == Unified2.send(method).send(:md5)
-            logger.say(:info, "Database Import: #{method}.")
-            klass.send(:import,  { method => Unified2.send(method).send(:data)})
-            @host.update(:"#{method}_md5" => Unified2.send(method).send(:md5))
-          end
-
-        end
       end
 
       def start
@@ -50,6 +40,20 @@ module Snorby
             next if event.signature.blank?
             
             puts event if logger.debug?
+            
+            Signature.first_or_create({ :name => event.signature.name }, {
+              :signature_id => event.signature.id,
+              :generator_id => event.signature.generator,
+              :name => event.signature.name,
+              :revision => event.signature.revision
+            })
+            
+            Classification.first_or_create({ :short => event.classification.short }, {
+              :classification_id => event.classification.id,
+              :name => event.classification.name,
+              :short => event.classification.short,
+              :severity_id => event.classification.severity
+            })
 
             insert_event = Event.new({
                                        :event_id => event.id,
@@ -67,7 +71,8 @@ module Snorby
                                        :packet_length => event.payload.length,
                                        :packet => event.payload.hex,
                                        :classification_id => event.classification.id,
-                                       :signature_id => event.signature.id
+                                       :signature_id => event.signature.id,
+                                       :severity_id => event.severity
             })
 
             if insert_event.save
@@ -81,7 +86,10 @@ module Snorby
           Snorby::Collect.logger.fail(e.message)
           @sensor.destroy
           exit -1
+        rescue DataObjects::SyntaxError => e
+          Snorby::Collect.logger.fail(e.message)
         rescue => e
+          Snorby::Collect.logger.fail(e.message)
         end
       end
 

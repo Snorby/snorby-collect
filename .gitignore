@@ -8,5 +8,7 @@ coverage
 rdoc
 doc
 .yardoc
+*.rbc
+*.compiled.rbc
 .bundle/
 .document

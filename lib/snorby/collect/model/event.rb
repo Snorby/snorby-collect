@@ -18,6 +18,8 @@ module Snorby
 
         property :sensor_id, Integer, :index => true
 
+        property :severity_id, Integer, :index => true
+
         property :source_ip, String, :index => true
 
         property :source_port, Integer
@@ -49,6 +51,8 @@ module Snorby
         belongs_to :classification
 
         belongs_to :signature
+        
+        belongs_to :severity
 
         validates_uniqueness_of :event_id, :scope => :sensor_id
 

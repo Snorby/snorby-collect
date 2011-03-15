@@ -11,6 +11,7 @@ has_yard: true
 
 post_install_message: |
   **************************************************************************
+   
    Snorby Collection Agent
    
    A default configuration file will be created and placed in ~/.snorby.
@@ -25,13 +26,13 @@ post_install_message: |
    
    http://www.snorby.org
    More Information: http://github.com/Snorby/snorby-collect
+   
   **************************************************************************
 
 dependencies:
   unified2: ~> 0.4.0
   datamapper: ~> 1.0.2
   env: ~> 0.1.2
-  ruby-progressbar: ~> 0.0.9
   daemon-spawn: ~> 0.4.1
 
 development_dependencies:
