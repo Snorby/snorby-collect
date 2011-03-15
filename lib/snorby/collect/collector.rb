@@ -80,7 +80,7 @@ module Snorby
             else
               logger.say(:fail, "Error: #{insert_event.errors}")
             end
-
+            
           end
         rescue Unified2::FileNotFound => e
           Snorby::Collect.logger.fail(e.message)
