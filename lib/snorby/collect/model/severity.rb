@@ -4,6 +4,7 @@ module Snorby
 
       class Severity
         include DataMapper::Resource
+        
         storage_names[:default] = "severities"
 
         timestamps :created_at, :updated_at
@@ -14,7 +15,7 @@ module Snorby
         
         property :events_count, Integer, :default => 0, :index => true
         
-        property :name, String
+        property :name, String, :unique => true
         
         property :text_color, String, :default => '#fff'
         
@@ -23,6 +24,7 @@ module Snorby
         has n, :events
 
         has n, :classifications
+        
       end
       
     end

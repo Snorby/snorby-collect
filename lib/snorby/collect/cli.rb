@@ -11,19 +11,10 @@ module Snorby
     class CLI
 
       def initialize(*args)
-        # CLI arguments
         @args = args
-
-        # Run as daemon
         @daemon = false
-
-        # Daemon arguments
         @daemon_args = nil
-
-        # Run snorby-collect
         @run = false
-
-        # Log level
         @verbose = :verbose
         Snorby::Collect.logger = Logger.new(@verbose)
 
@@ -77,8 +68,7 @@ module Snorby
 
           begin
 
-            # Build default configuration file
-            # and directory structure.
+            # Build default configuration file and directory structure.
             Config.build_defaults
 
             usage if @args.empty?

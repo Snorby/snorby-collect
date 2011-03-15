@@ -1,3 +1,5 @@
+require 'snorby/collect/model/severity'
+
 module Snorby
   module Collect
     module Model
@@ -6,12 +8,14 @@ module Snorby
         include DataMapper::Resource
 
         storage_names[:default] = "classifications"
-
+        
+        is :counter_cacheable
+        
         timestamps :created_at, :updated_at
 
         property :id, Serial, :index => true
 
-        property :classification_id, Integer, :index => true
+        property :classification_id, Integer, :index => true, :unique => true
 
         property :name, Text
 
@@ -22,6 +26,8 @@ module Snorby
         has n, :events
 
         belongs_to :severity
+
+        #counter_cacheable :severity
 
         validates_uniqueness_of :name, :classification_id
 

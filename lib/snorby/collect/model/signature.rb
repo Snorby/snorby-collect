@@ -15,7 +15,7 @@ module Snorby
 
         property :generator_id, Integer, :index => true
 
-        property :name, Text
+        property :name, Text, :unique => true
         
         property :revision, Integer
 

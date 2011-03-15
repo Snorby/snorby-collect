@@ -10,6 +10,8 @@ module Snorby
 
         timestamps :created_at, :updated_at
 
+        is :counter_cacheable
+
         property :id, Serial, :index => true
 
         property :interface, String
@@ -26,7 +28,12 @@ module Snorby
 
         belongs_to :host
 
+        counter_cacheable :host
+
+        validates_uniqueness_of :interface, :scope => :host
+        
         validates_uniqueness_of :name, :checksum
+        
         validates_presence_of :interface, :name, :checksum, :host_id
 
         def events_count
@@ -39,13 +46,12 @@ module Snorby
             :hostname => object.hostname
           })
 
-          sensor = first(:host_id => host.id, :name => object.name, :checksum => object.checksum)
+          sensor = first(:host => host, :interface => object.interface, :checksum => object.checksum)
 
           if sensor
             sensor.update(
               {
                 :interface => object.interface,
-                :name => object.name,
                 :checksum => object.checksum
               }
             )
@@ -61,6 +67,7 @@ module Snorby
 
           unless sensor.errors.empty?
             sensor.errors.each do |key, value|
+              # add case statement
               fail("Sensor Validation Error: #{key}! You may be trying to add a duplicate logical sensor.")
             end
             exit -1

@@ -32,6 +32,7 @@ post_install_message: |
 dependencies:
   unified2: ~> 0.4.0
   datamapper: ~> 1.0.2
+  dm-is-counter_cacheable: ~> 0.1.0
   env: ~> 0.1.2
   daemon-spawn: ~> 0.4.1
 

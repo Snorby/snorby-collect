@@ -1,15 +1,19 @@
+require 'snorby/collect/model/signature'
+
 module Snorby
   module Collect
     module Model
-      
+
       class Event
         include DataMapper::Resource
         storage_names[:default] = "events"
 
         timestamps :created_at, :updated_at
 
+        is :counter_cacheable
+
         property :id, Serial, :index => true
-        
+
         property :checksum, String, :index => true
 
         property :event_id, Integer, :index => true
@@ -51,8 +55,14 @@ module Snorby
         belongs_to :classification
 
         belongs_to :signature
-        
+
         belongs_to :severity
+
+        counter_cacheable :classification
+
+        counter_cacheable :signature
+
+        #counter_cacheable :severity
 
         validates_uniqueness_of :event_id, :scope => :sensor_id
 
@@ -62,7 +72,7 @@ module Snorby
         end
 
       end
-      
+
     end
   end
 end

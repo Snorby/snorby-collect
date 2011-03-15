@@ -1,4 +1,5 @@
 require 'datamapper'
+require 'dm-is-counter_cacheable'
 require 'snorby/collect/helpers'
 require 'snorby/collect/model'
 
