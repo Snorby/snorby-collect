@@ -1,25 +1,41 @@
-require 'daemon_spawn'
+require 'pidly'
 require 'snorby/collect/collector'
 require 'snorby/collect/helpers'
 
 module Snorby
   module Collect
-    class Daemon < DaemonSpawn::Base
+    
+    class Daemon < Pidly::Control
       include Collect::Helpers
-
-      def start(args)
-        args.is_a?(Array) ? ((args.first == :debug) ? log = :verbose : log = :verbose) : log = :verbose
-        Snorby::Collect.logger = Logger.new(log, true)
-        logger.say(:info, "Daemon started successfully. PID: #{self.pid}")
+      
+      before_start do
+        Snorby::Collect.logger = Logger.new(:verbose, true)
+        logger.say(:info, "\"#{@name}\" started successfully (PID: #{@pid})", @log_file, true)
+      end
+      
+      start do
         @collect = Collector.new
         @collect.setup
         @collect.start
       end
 
-      def stop
-        logger.say(:info, "Shutting down.")
+      stop do
+        logger.say(:info, "Attempting to stop \"#{@name}\" (PID: #{@pid})", @log_file, true)
+      end
+
+      after_stop do
+        logger.say(:info, "Successfully stopped \"#{@name}\" (PID: #{@pid})", @log_file, true)
+      end
+      
+      error do
+        logger.say(:error, "\"#{@name}\" error (PID: #{@pid})", @log_file)
+      end
+      
+      kill do
+        logger.say(:info, "Killing \"#{@name}\" (PID: #{@pid})", @log_file)
       end
 
     end
+    
   end
 end

@@ -21,33 +21,15 @@ module Snorby
       end
 
       def verbose?
-        if @level == :verbose
-          return true unless @daemon
-          return false
-        end
+        return true if @level == :verbose
         false
       end
 
-      def info(message)
-        time = @timestamp ? "[#{Time.now.strftime('%D %H:%M:%S')}]" : "\b"
-        STDOUT.puts "[INFO] #{time} #{message}"
-      end
-
-      def warn(message)
-        time = @timestamp ? "[#{Time.now.strftime('%D %H:%M:%S')}]" : "\b"
-        STDOUT.puts "[WARN] #{time} #{message}"
-      end
-
-      def fail(message)
-        time = @timestamp ? "[#{Time.now.strftime('%D %H:%M:%S')}]" : "\b"
-        STDERR.puts "[FAIL] #{time} #{message}"
-      end
-
-      def say(type, message)
+      def say(type, message, log_file=nil, both=false)
         return unless verbose? || debug?
         timestamp, @timestamp = @timestamp, true
-        STDOUT.sync
-        case type.to_sym
+
+        reply = case type.to_sym
         when :info
           info(message)
         when :warn
@@ -55,7 +37,33 @@ module Snorby
         when :fail
           fail(message)
         end
+        
+        if ((log_file) && File.exists?(log_file))
+          log = File.new(log_file, "a")
+          log.sync = true
+          log.puts reply
+          log.close
+          puts reply if both
+        else
+          puts reply
+        end
+        
         @timestamp = timestamp
+      end
+
+      def info(message)
+        time = @timestamp ? "[#{Time.now.strftime('%D %H:%M:%S')}]" : "\b"
+        "[INFO] #{time} #{message}"
+      end
+
+      def warn(message)
+        time = @timestamp ? "[#{Time.now.strftime('%D %H:%M:%S')}]" : "\b"
+        "[WARN] #{time} #{message}"
+      end
+
+      def fail(message)
+        time = @timestamp ? "[#{Time.now.strftime('%D %H:%M:%S')}]" : "\b"
+        "[FAIL] #{time} #{message}"
       end
 
     end

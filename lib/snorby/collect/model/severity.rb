@@ -13,8 +13,6 @@ module Snorby
         
         property :severity_id, Integer, :index => true
         
-        property :events_count, Integer, :default => 0, :index => true
-        
         property :name, String, :unique => true
         
         property :text_color, String, :default => '#fff'
@@ -24,6 +22,17 @@ module Snorby
         has n, :events
 
         has n, :classifications
+      
+        validates_uniqueness_of :severity_id
+      
+        def self.build_defaults
+          if Severity.all.blank?
+            Severity.create(:id => 1, :severity_id => 1, :name => 'High Severity', :text_color => "#ffffff", :bg_color => "#ff0000")
+            Severity.create(:id => 2, :severity_id => 2, :name => 'Medium Severity', :text_color => "#ffffff", :bg_color => "#fab908")
+            Severity.create(:id => 3, :severity_id => 3, :name => 'Low Severity', :text_color => "#ffffff", :bg_color => "#3a781a")
+            Severity.create(:id => 4, :severity_id => 4, :name => 'Information Severity', :text_color => "#ffffff", :bg_color => "#3a781a")
+          end
+        end
         
       end
       

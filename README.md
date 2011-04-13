@@ -72,8 +72,7 @@ The snorby collection agent is in charge of monitoring & process unified2 data. 
  * unified2: ~> 0.2.0
  * datamapper: ~> 1.0.2
  * env: ~> 0.1.2
- * ruby-progressbar: ~ 0.9
- * daemon-spawn: ~> 0.4.1
+ * pidly: ~> 0.1
 	
 ## Install
 

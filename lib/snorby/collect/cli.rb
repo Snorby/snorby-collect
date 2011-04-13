@@ -38,9 +38,9 @@ module Snorby
             @run = true
           end
 
-          @opts.on('-d', '--daemon COMMAND', 'Run as daemon. Example -d [start,stop,status,restart]') do |daemon_args|
+          @opts.on('-d', '--daemon COMMAND', 'Run as daemon. Example -d [start,stop,status,restart,kill,clean]') do |daemon_args|
             @daemon = true
-            if daemon_args.match(/^(start|stop|status|restart)$/)
+            if daemon_args.match(/^(start|stop|status|restart|kill|clean!)$/)
               @daemon_args = daemon_args
             else
               Snorby::Collect.logger.fail("Unknown option for daemon `#{daemon_args}`")
@@ -66,8 +66,7 @@ module Snorby
             exit -1
           end
 
-          begin
-
+          #begin
             # Build default configuration file and directory structure.
             Config.build_defaults
 
@@ -85,16 +84,13 @@ module Snorby
               Snorby::Collect.logger = Logger.new(@verbose)
               if @run || @daemon
                 if @daemon
-                  Daemon.spawn!(
-                    {
-                      :application => "Snorby Collection Agent v#{Snorby::Collect::VERSION}",
-                      :log_file => File.join(Config.logs, "#{Config.logname}.log"),
-                      :pid_file => File.join(Config.pids, "#{Config.logname}.pid"),
-                      :sync_log => true,
-                      :working_dir => Config.path
-                    },
-                    [@daemon_args, @verbose]
+                  collect = Daemon.spawn(
+                    :name => Config.name,
+                    :path => Config.path,
+                    :sync_log => true,
+                    :verbose => true
                   )
+                  collect.send @daemon_args
                 else
                   @collect = Collector.new
                   @collect.setup
@@ -103,22 +99,22 @@ module Snorby
 
               end
             end
-          rescue Interrupt
-            Snorby::Collect.logger.warn('Shutting down...')
-            exit -1
-          rescue RuntimeError => e
-            Snorby::Collect.logger.fail(e.message)
-            exit -1
-          rescue OptionParser::MissingArgument => e
-            Snorby::Collect.logger.fail(e.message)
-            usage
-          rescue OptionParser::InvalidOption => e
-            Snorby::Collect.logger.fail(e.message)
-            usage
-          rescue => e
-            Snorby::Collect.logger.fail(e.message)
-            exit -1
-          end
+          # rescue Interrupt
+          #   Snorby::Collect.logger.warn('Shutting down...')
+          #   exit -1
+          # rescue RuntimeError => e
+          #   Snorby::Collect.logger.fail(e.message)
+          #   exit -1
+          # rescue OptionParser::MissingArgument => e
+          #   Snorby::Collect.logger.fail(e.message)
+          #   usage
+          # rescue OptionParser::InvalidOption => e
+          #   Snorby::Collect.logger.fail(e.message)
+          #   usage
+          # rescue => e
+          #   Snorby::Collect.logger.fail(e.message)
+          #   exit -1
+          # end
         end
 
         def usage(error=nil)

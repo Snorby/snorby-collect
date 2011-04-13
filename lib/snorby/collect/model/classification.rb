@@ -16,19 +16,17 @@ module Snorby
         property :id, Serial, :index => true
 
         property :classification_id, Integer, :index => true, :unique => true
+        
+        property :severity_id, Integer, :index => true
 
         property :name, Text
 
         property :short, String
 
-        property :severity_id, Integer, :index => true
-
         has n, :events
-
+        
         belongs_to :severity
-
-        #counter_cacheable :severity
-
+        
         validates_uniqueness_of :name, :classification_id
 
       end

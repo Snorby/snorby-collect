@@ -1,4 +1,8 @@
+require 'snorby/collect/model/icmp'
+require 'snorby/collect/model/severity'
 require 'snorby/collect/model/signature'
+require 'snorby/collect/model/tcp'
+require 'snorby/collect/model/udp'
 
 module Snorby
   module Collect
@@ -7,7 +11,7 @@ module Snorby
       class Event
         include DataMapper::Resource
         storage_names[:default] = "events"
-
+        
         timestamps :created_at, :updated_at
 
         is :counter_cacheable
@@ -40,13 +44,39 @@ module Snorby
 
         property :user_id, Integer, :index => true
 
-        property :protocol, String, :index => true
+        property :protocol, String, :index => true, :length => 10
 
         property :link_type, Integer
 
-        property :packet_length, Integer
+        property :payload_length, Integer
 
-        property :packet, Text
+        property :payload, Text
+        
+        property :payload_checksum, String, :index => true
+        
+        # IP HEADER
+
+        property :ip_ver, Integer, :lazy => true, :min => 0, :required => true, :default => 0
+        
+        property :ip_hlen, Integer, :lazy => true, :min => 0, :required => true, :default => 0
+        
+        property :ip_tos, Integer, :lazy => true, :min => 0, :required => true, :default => 0
+        
+        property :ip_len, Integer, :lazy => true, :min => 0, :required => true, :default => 0
+        
+        property :ip_id, Integer, :lazy => true, :min => 0, :required => true, :default => 0
+        
+        property :ip_frag, Integer, :lazy => true, :min => 0, :required => true, :default => 0
+        
+        property :ip_csum, Integer, :lazy => true, :min => 0, :required => true, :default => 0
+        
+        property :ip_ttl, Integer, :lazy => true, :min => 0, :required => true, :default => 0
+        
+        property :ip_proto, Integer, :lazy => true, :min => 0, :required => true, :default => 0
+        
+        property :ip_id, Integer, :lazy => true, :min => 0, :required => true, :default => 0
+        
+        # END IP HEADER
 
         belongs_to :host
 
@@ -57,12 +87,14 @@ module Snorby
         belongs_to :signature
 
         belongs_to :severity
+        
+        has 1, :tcp, :udp, :icmp
 
         counter_cacheable :classification
 
         counter_cacheable :signature
 
-        #counter_cacheable :severity
+        counter_cacheable :severity
 
         validates_uniqueness_of :event_id, :scope => :sensor_id
 
